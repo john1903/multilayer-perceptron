@@ -72,9 +72,9 @@ public class MultiLayerPerceptronTest {
 
     @Test
     public void testTrainModel() throws IOException {
-        int[] hiddenLayers = {4, 4};
-        double learningRate = 0.005;
-        int epochs = 40;
+        int[] hiddenLayers = {4, 5, 4, 5, 5, 4, 5, 4};
+        double learningRate = 0.01;
+        int epochs = 100;
 
         MultiLayerPerceptron mlp = new MultiLayerPerceptron(hiddenLayers, learningRate, epochs);
         MultiLayerNetwork model = mlp.createModel();
@@ -83,8 +83,6 @@ public class MultiLayerPerceptronTest {
         INDArray[] data = dataLoader.loadData("src/test/resources/train_data.csv");
 
         DataSetIterator trainData = new ListDataSetIterator<>(List.of(new DataSet(data[0], data[1])), 10);
-
-        model.setListeners(new ScoreIterationListener(5));
 
         assertDoesNotThrow(() -> mlp.trainModel(model, trainData));
     }

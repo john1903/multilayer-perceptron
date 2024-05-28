@@ -49,7 +49,7 @@ public class MultiLayerPerceptron {
 
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
         model.init();
-        model.setListeners(new ScoreIterationListener(100));
+        model.setListeners(new ScoreIterationListener(5));
 
         return model;
     }
