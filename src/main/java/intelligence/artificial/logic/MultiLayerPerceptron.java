@@ -7,7 +7,6 @@ import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
-import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -47,7 +46,6 @@ public class MultiLayerPerceptron {
 
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
         model.init();
-        model.setListeners(new ScoreIterationListener(5));
 
         return model;
     }
@@ -63,6 +61,7 @@ public class MultiLayerPerceptron {
     }
 
     public static void trainModel(MultiLayerNetwork model, DataSetIterator trainData, int epochs) {
+        model.setListeners(new LastIterationScoreListener(epochs - 1));
         for (int i = 0; i < epochs; i++) {
             model.fit(trainData);
         }

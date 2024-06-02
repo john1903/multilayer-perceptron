@@ -3,7 +3,6 @@ package intelligence.artificial;
 import intelligence.artificial.managers.DataManager;
 import intelligence.artificial.managers.MultiLayerPerceptronManager;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
-import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -54,7 +53,6 @@ public class Main {
                     int epochs = Integer.parseInt(args[3]);
 
                     model = MultiLayerPerceptronManager.loadModel(modelPath);
-                    model.setListeners(new ScoreIterationListener(epochs - 1));
                     DataManager dataManager = new DataManager(trainDataPath);
                     INDArray[] data = dataManager.loadAllData();
                     if (data == null || data.length < 2 || data[0].rows() == 0 || data[1].rows() == 0) {
