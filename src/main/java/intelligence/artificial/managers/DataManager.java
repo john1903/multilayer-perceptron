@@ -2,7 +2,6 @@ package intelligence.artificial.managers;
 
 import intelligence.artificial.dao.DataLoader;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.factory.Nd4j;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -18,23 +17,18 @@ public class DataManager {
         this.dataLoader = new DataLoader();
     }
 
-    public INDArray[] loadAllData() throws IOException {
-        List<INDArray> inputList = new ArrayList<>();
-        List<INDArray> outputList = new ArrayList<>();
+    public List<INDArray[]> loadAllData() throws IOException {
+        List<INDArray[]> loadedData = new ArrayList<>();
 
         DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(folderPath));
 
         for (Path path : directoryStream) {
             if (Files.isRegularFile(path)) {
                 INDArray[] data = dataLoader.loadData(path.toString());
-                inputList.add(data[0]);
-                outputList.add(data[1]);
+                loadedData.add(data);
             }
         }
 
-        INDArray combinedInputs = Nd4j.vstack(inputList);
-        INDArray combinedOutputs = Nd4j.vstack(outputList);
-
-        return new INDArray[]{combinedInputs, combinedOutputs};
+        return loadedData;
     }
 }
