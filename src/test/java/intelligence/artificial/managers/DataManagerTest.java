@@ -48,20 +48,24 @@ public class DataManagerTest {
 
     @Test
     public void testLoadAllData() throws IOException {
-        List<INDArray[]> allData = dataManager.loadAllData();
+        INDArray[] allData = dataManager.loadAllData();
 
-        INDArray[] expectedDataFile1 = new INDArray[]{
-                Nd4j.create(new double[][]{{1.0, 2.0}, {3.0, 4.0}}),
-                Nd4j.create(new double[][]{{5.0, 6.0}, {7.0, 8.0}})
-        };
-        INDArray[] expectedDataFile2 = new INDArray[]{
-                Nd4j.create(new double[][]{{9.0, 10.0}, {11.0, 12.0}}),
-                Nd4j.create(new double[][]{{13.0, 14.0}, {15.0, 16.0}})
-        };
+        INDArray expectedInputs = Nd4j.create(new double[][]{
+                {1.0, 2.0}, {3.0, 4.0},
+                {9.0, 10.0}, {11.0, 12.0}
+        });
+        INDArray expectedOutputs = Nd4j.create(new double[][]{
+                {5.0, 6.0}, {7.0, 8.0},
+                {13.0, 14.0}, {15.0, 16.0}
+        });
 
-        assertEquals(2, allData.size());
-        assertArrayEquals(expectedDataFile1, allData.get(0));
-        assertArrayEquals(expectedDataFile2, allData.get(1));
+        assertEquals(expectedInputs.shape()[0], allData[0].shape()[0]);
+        assertEquals(expectedInputs.shape()[1], allData[0].shape()[1]);
+        assertEquals(expectedOutputs.shape()[0], allData[1].shape()[0]);
+        assertEquals(expectedOutputs.shape()[1], allData[1].shape()[1]);
+
+        assertArrayEquals(expectedInputs.toDoubleMatrix(), allData[0].toDoubleMatrix());
+        assertArrayEquals(expectedOutputs.toDoubleMatrix(), allData[1].toDoubleMatrix());
     }
 
     private void createTestDataFile(Path filePath, double[][] inputs, double[][] outputs) throws IOException {

@@ -70,15 +70,14 @@ public class Main {
                             break;
                         }
                         DataManager dataManager = new DataManager(trainDataPath);
-                        List<INDArray[]> data = dataManager.loadAllData();
-                        for (INDArray[] indArray : data) {
-                            if (indArray == null || indArray.length < 2 || indArray[0].rows() == 0 || indArray[1].rows() == 0) {
-                                System.out.println("Invalid data. Please check the data files and try again.");
-                                continue;
-                            }
-                            DataSetIterator trainData = new ListDataSetIterator<>(List.of(new DataSet(indArray[0], indArray[1])), 10);
-                            manager.trainModel(model, trainData);
+                        INDArray[] data = dataManager.loadAllData();
+                        if (data == null || data.length < 2 || data[0].rows() == 0 || data[1].rows() == 0) {
+                            System.out.println("Invalid data. Skipping training.");
+                            break;
                         }
+                        DataSetIterator trainData = new ListDataSetIterator<>(List.of(new DataSet(data[0], data[1])), 10);
+                        assert manager != null;
+                        manager.trainModel(model, trainData);
                         System.out.println("Model trained successfully.");
                         break;
 
@@ -97,6 +96,7 @@ public class Main {
                         for (int i = 0; i < weightsStr.length; i++) {
                             weights[i] = Double.parseDouble(weightsStr[i].trim());
                         }
+                        assert manager != null;
                         manager.setWeights(model, nIn, layerIndex, weights);
                         System.out.println("Weights set successfully.");
                         break;
@@ -108,15 +108,15 @@ public class Main {
                         }
                         System.out.print("Enter file path to save the model: ");
                         String savePath = scanner.nextLine();
-                        manager.saveModel(model, savePath);
+                        MultiLayerPerceptronManager.saveModel(model, savePath);
                         System.out.println("Model saved successfully.");
                         break;
 
                     case 5:
                         System.out.print("Enter file path to load the model: ");
                         String loadPath = scanner.nextLine();
-                        assert manager != null;
-                        model = manager.loadModel(loadPath);
+                        model = MultiLayerPerceptronManager.loadModel(loadPath);
+                        manager = new MultiLayerPerceptronManager(model);
                         System.out.println("Model loaded successfully.");
                         break;
 
@@ -150,26 +150,22 @@ public class Main {
 
     private static void generatePredictionsCSV(MultiLayerNetwork model, String userDataPath, String csvFilePath) throws IOException {
         DataManager dataManager = new DataManager(userDataPath);
-        List<INDArray[]> data = dataManager.loadAllData();
+        INDArray[] data = dataManager.loadAllData();
+
+        INDArray inputs = data[0];
+        INDArray actualOutputs = data[1];
+        INDArray predictedOutputs = model.output(inputs);
 
         try (FileWriter writer = new FileWriter(csvFilePath)) {
-            writer.append("inputX,inputY,calculatedPositionX,calculatedPositionY,actualX,actualY\n");
+            writer.append("inputX,inputY,predictedPositionX,predictedPositionY,actualX,actualY\n");
 
-            for (INDArray[] indArray : data) {
-                if (indArray == null || indArray.length < 2 || indArray[0].rows() == 0 || indArray[1].rows() == 0) {
-                    System.out.println("Invalid data. Skipping entry.");
-                    continue;
-                }
-
-                INDArray inputs = indArray[0];
-                INDArray actualOutputs = indArray[1];
-                INDArray predictedOutputs = model.output(inputs);
-
-                for (int i = 0; i < inputs.rows(); i++) {
-                    writer.append(String.valueOf(inputs.getFloat(i, 0))).append(",").append(String.valueOf(inputs.getFloat(i, 1))).append(",");
-                    writer.append(String.valueOf(predictedOutputs.getFloat(i, 0))).append(",").append(String.valueOf(predictedOutputs.getFloat(i, 1))).append(",");
-                    writer.append(String.valueOf(actualOutputs.getFloat(i, 0))).append(",").append(String.valueOf(actualOutputs.getFloat(i, 1))).append("\n");
-                }
+            for (int i = 0; i < inputs.rows(); i++) {
+                writer.append(String.valueOf(inputs.getFloat(i, 0))).append(",")
+                        .append(String.valueOf(inputs.getFloat(i, 1))).append(",")
+                        .append(String.valueOf(predictedOutputs.getFloat(i, 0))).append(",")
+                        .append(String.valueOf(predictedOutputs.getFloat(i, 1))).append(",")
+                        .append(String.valueOf(actualOutputs.getFloat(i, 0))).append(",")
+                        .append(String.valueOf(actualOutputs.getFloat(i, 1))).append("\n");
             }
         }
     }

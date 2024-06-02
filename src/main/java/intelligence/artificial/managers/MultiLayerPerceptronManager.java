@@ -14,6 +14,10 @@ public class MultiLayerPerceptronManager {
         multiLayerPerceptron = new MultiLayerPerceptron(hiddenLayers, learningRate, epochs);
     }
 
+    public MultiLayerPerceptronManager(MultiLayerNetwork model) {
+        multiLayerPerceptron = new MultiLayerPerceptron(model);
+    }
+
     public MultiLayerNetwork createModel() {
         return multiLayerPerceptron.createModel();
     }
@@ -26,11 +30,11 @@ public class MultiLayerPerceptronManager {
         multiLayerPerceptron.setWeights(model, nIn, layerIndex, weights);
     }
 
-    public void saveModel(MultiLayerNetwork model, String filePath) throws IOException {
+    public static void saveModel(MultiLayerNetwork model, String filePath) throws IOException {
         ModelSerializer.writeModel(model, new File(filePath), true);
     }
 
-    public MultiLayerNetwork loadModel(String filePath) throws IOException {
+    public static MultiLayerNetwork loadModel(String filePath) throws IOException {
         return ModelSerializer.restoreMultiLayerNetwork(new File(filePath));
     }
 }

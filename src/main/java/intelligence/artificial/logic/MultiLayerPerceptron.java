@@ -19,11 +19,20 @@ public class MultiLayerPerceptron {
     private final int[] hiddenLayers;
     private final double learningRate;
     private final int epochs;
+    private final MultiLayerNetwork model;
 
     public MultiLayerPerceptron(int[] hiddenLayers, double learningRate, int epochs) {
         this.hiddenLayers = hiddenLayers;
         this.learningRate = learningRate;
         this.epochs = epochs;
+        this.model = createModel();
+    }
+
+    public MultiLayerPerceptron(MultiLayerNetwork model) {
+        this.hiddenLayers = null;
+        this.learningRate = 0;
+        this.epochs = 0;
+        this.model = model;
     }
 
     public MultiLayerNetwork createModel() {
@@ -69,4 +78,5 @@ public class MultiLayerPerceptron {
             model.fit(trainData);
         }
     }
+
 }

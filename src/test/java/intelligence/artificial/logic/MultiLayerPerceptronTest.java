@@ -2,8 +2,7 @@ package intelligence.artificial.logic;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import intelligence.artificial.dao.DataLoader;
-import intelligence.artificial.dao.DataLoaderInterface;
+import intelligence.artificial.managers.DataManager;
 import org.deeplearning4j.datasets.iterator.utilty.ListDataSetIterator;
 import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
@@ -78,10 +77,13 @@ public class MultiLayerPerceptronTest {
         MultiLayerPerceptron mlp = new MultiLayerPerceptron(hiddenLayers, learningRate, epochs);
         MultiLayerNetwork model = mlp.createModel();
 
-        DataLoaderInterface dataLoader = new DataLoader();
-        INDArray[] data = dataLoader.loadData("src/test/resources/train_data.csv");
+        DataManager dataManager = new DataManager("src/test/resources/");
+        INDArray[] data = dataManager.loadAllData();
 
-        DataSetIterator trainData = new ListDataSetIterator<>(List.of(new DataSet(data[0], data[1])), 10);
+        INDArray inputData = data[0];
+        INDArray outputData = data[1];
+
+        DataSetIterator trainData = new ListDataSetIterator<>(List.of(new DataSet(inputData, outputData)), 10);
 
         assertDoesNotThrow(() -> mlp.trainModel(model, trainData));
     }

@@ -1,8 +1,5 @@
 package intelligence.artificial.dao;
 
-import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.factory.Nd4j;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -11,7 +8,7 @@ import java.util.List;
 
 public class DataLoader implements DataLoaderInterface {
     @Override
-    public INDArray[] loadData(String filePath) throws IOException {
+    public double[][][] loadData(String filePath) throws IOException {
 
         List<String> lines = Files.readAllLines(Paths.get(filePath));
         List<double[]> inputDataList = new ArrayList<>();
@@ -43,9 +40,6 @@ public class DataLoader implements DataLoaderInterface {
             outputData[i] = outputDataList.get(i);
         }
 
-        INDArray inputs = Nd4j.createFromArray(inputData);
-        INDArray outputs = Nd4j.createFromArray(outputData);
-
-        return new INDArray[]{inputs, outputs};
+        return new double[][][]{inputData, outputData};
     }
 }
