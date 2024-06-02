@@ -8,6 +8,7 @@ import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.deeplearning4j.datasets.iterator.utilty.ListDataSetIterator;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
@@ -25,7 +26,8 @@ public class Main {
             System.out.println("3. Set weights");
             System.out.println("4. Save model");
             System.out.println("5. Load model");
-            System.out.println("6. Exit");
+            System.out.println("6. Generate CSV with predictions");
+            System.out.println("7. Exit");
 
             String choiceStr = scanner.nextLine();
             int choice;
@@ -119,6 +121,19 @@ public class Main {
                         break;
 
                     case 6:
+                        if (model == null) {
+                            System.out.println("Create or load a model first.");
+                            break;
+                        }
+                        System.out.print("Enter the path to the user data file: ");
+                        String userDataPath = scanner.nextLine();
+                        System.out.print("Enter the path to save the CSV file: ");
+                        String csvFilePath = scanner.nextLine();
+                        generatePredictionsCSV(model, userDataPath, csvFilePath);
+                        System.out.println("CSV file generated successfully.");
+                        break;
+
+                    case 7:
                         System.out.println("Exiting...");
                         return;
 
@@ -129,6 +144,32 @@ public class Main {
                 System.out.println("An error occurred: " + e.getMessage());
             } catch (NumberFormatException e) {
                 System.out.println("Invalid number format: " + e.getMessage());
+            }
+        }
+    }
+
+    private static void generatePredictionsCSV(MultiLayerNetwork model, String userDataPath, String csvFilePath) throws IOException {
+        DataManager dataManager = new DataManager(userDataPath);
+        List<INDArray[]> data = dataManager.loadAllData();
+
+        try (FileWriter writer = new FileWriter(csvFilePath)) {
+            writer.append("inputX,inputY,calculatedPositionX,calculatedPositionY,actualX,actualY\n");
+
+            for (INDArray[] indArray : data) {
+                if (indArray == null || indArray.length < 2 || indArray[0].rows() == 0 || indArray[1].rows() == 0) {
+                    System.out.println("Invalid data. Skipping entry.");
+                    continue;
+                }
+
+                INDArray inputs = indArray[0];
+                INDArray actualOutputs = indArray[1];
+                INDArray predictedOutputs = model.output(inputs);
+
+                for (int i = 0; i < inputs.rows(); i++) {
+                    writer.append(String.valueOf(inputs.getFloat(i, 0))).append(",").append(String.valueOf(inputs.getFloat(i, 1))).append(",");
+                    writer.append(String.valueOf(predictedOutputs.getFloat(i, 0))).append(",").append(String.valueOf(predictedOutputs.getFloat(i, 1))).append(",");
+                    writer.append(String.valueOf(actualOutputs.getFloat(i, 0))).append(",").append(String.valueOf(actualOutputs.getFloat(i, 1))).append("\n");
+                }
             }
         }
     }
