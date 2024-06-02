@@ -3,6 +3,7 @@ package intelligence.artificial;
 import intelligence.artificial.managers.DataManager;
 import intelligence.artificial.managers.MultiLayerPerceptronManager;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -25,7 +26,7 @@ public class Main {
         try {
             switch (args[0]) {
                 case "create":
-                    if (args.length < 5) {
+                    if (args.length < 4) {
                         printUsage();
                         return;
                     }
@@ -35,26 +36,25 @@ public class Main {
                         hiddenLayers[i] = Integer.parseInt(hiddenLayersStr[i].trim());
                     }
                     double learningRate = Double.parseDouble(args[2]);
-                    int epochs = Integer.parseInt(args[3]);
-                    String savePath = args[4];
+                    String savePath = args[3];
 
-                    manager = new MultiLayerPerceptronManager(hiddenLayers, learningRate, epochs);
+                    manager = new MultiLayerPerceptronManager(hiddenLayers, learningRate);
                     model = manager.createModel();
                     MultiLayerPerceptronManager.saveModel(model, savePath);
                     System.out.println("Model created and saved successfully.");
                     break;
 
                 case "train":
-                    if (args.length < 3) {
+                    if (args.length < 4) {
                         printUsage();
                         return;
                     }
                     String modelPath = args[1];
                     String trainDataPath = args[2];
+                    int epochs = Integer.parseInt(args[3]);
 
                     model = MultiLayerPerceptronManager.loadModel(modelPath);
-                    manager = new MultiLayerPerceptronManager(model);
-
+                    model.setListeners(new ScoreIterationListener(epochs - 1));
                     DataManager dataManager = new DataManager(trainDataPath);
                     INDArray[] data = dataManager.loadAllData();
                     if (data == null || data.length < 2 || data[0].rows() == 0 || data[1].rows() == 0) {
@@ -62,10 +62,9 @@ public class Main {
                         return;
                     }
                     DataSetIterator trainData = new ListDataSetIterator<>(List.of(new DataSet(data[0], data[1])), 10);
-                    manager.trainModel(model, trainData);
+                    MultiLayerPerceptronManager.trainModel(model, trainData, epochs);
                     MultiLayerPerceptronManager.saveModel(model, modelPath);
                     System.out.println("Model trained and saved successfully.");
-                    System.out.println("MODEL_EVALUATION: " + model.evaluate(trainData).stats());
                     break;
 
                 case "set-weights":
@@ -83,8 +82,7 @@ public class Main {
                     }
 
                     model = MultiLayerPerceptronManager.loadModel(modelPath);
-                    manager = new MultiLayerPerceptronManager(model);
-                    manager.setWeights(model, nIn, layerIndex, weights);
+                    MultiLayerPerceptronManager.setWeights(model, nIn, layerIndex, weights);
                     MultiLayerPerceptronManager.saveModel(model, modelPath);
                     System.out.println("Weights set and model saved successfully.");
                     break;
@@ -138,8 +136,8 @@ public class Main {
 
     private static void printUsage() {
         System.out.println("Usage:");
-        System.out.println("  create <hidden_layers> <learning_rate> <epochs> <path_to_save>");
-        System.out.println("  train <model_path> <train_data_path>");
+        System.out.println("  create <hidden_layers> <learning_rate> <path_to_save>");
+        System.out.println("  train <model_path> <train_data_path> <epochs>");
         System.out.println("  set-weights <model_path> <layer_index> <n_in> <weights>");
         System.out.println("  predict <model_path> <user_data_path> <csv_file_path>");
     }

@@ -18,21 +18,10 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 public class MultiLayerPerceptron {
     private final int[] hiddenLayers;
     private final double learningRate;
-    private final int epochs;
-    private final MultiLayerNetwork model;
 
-    public MultiLayerPerceptron(int[] hiddenLayers, double learningRate, int epochs) {
+    public MultiLayerPerceptron(int[] hiddenLayers, double learningRate) {
         this.hiddenLayers = hiddenLayers;
         this.learningRate = learningRate;
-        this.epochs = epochs;
-        this.model = createModel();
-    }
-
-    public MultiLayerPerceptron(MultiLayerNetwork model) {
-        this.hiddenLayers = null;
-        this.learningRate = 0;
-        this.epochs = 0;
-        this.model = model;
     }
 
     public MultiLayerNetwork createModel() {
@@ -63,7 +52,7 @@ public class MultiLayerPerceptron {
         return model;
     }
 
-    public void setWeights(MultiLayerNetwork model, int nIn, int layerIndex, double[] weights) {
+    public static void setWeights(MultiLayerNetwork model, int nIn, int layerIndex, double[] weights) {
         INDArray weightArray = Nd4j.create(weights);
 
         int nOut = weights.length;
@@ -73,7 +62,7 @@ public class MultiLayerPerceptron {
         model.getLayer(layerIndex).setParam("W", weightArray);
     }
 
-    public void trainModel(MultiLayerNetwork model, DataSetIterator trainData) {
+    public static void trainModel(MultiLayerNetwork model, DataSetIterator trainData, int epochs) {
         for (int i = 0; i < epochs; i++) {
             model.fit(trainData);
         }

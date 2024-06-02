@@ -21,9 +21,8 @@ public class MultiLayerPerceptronTest {
     public void testCreateModel() {
         int[] hiddenLayers = {3, 3};
         double learningRate = 0.01;
-        int epochs = 10;
 
-        MultiLayerPerceptron mlp = new MultiLayerPerceptron(hiddenLayers, learningRate, epochs);
+        MultiLayerPerceptron mlp = new MultiLayerPerceptron(hiddenLayers, learningRate);
         MultiLayerNetwork model = mlp.createModel();
 
         assertNotNull(model);
@@ -42,16 +41,15 @@ public class MultiLayerPerceptronTest {
     public void testSetWeights() {
         int[] hiddenLayers = {3, 3};
         double learningRate = 0.01;
-        int epochs = 10;
 
-        MultiLayerPerceptron mlp = new MultiLayerPerceptron(hiddenLayers, learningRate, epochs);
+        MultiLayerPerceptron mlp = new MultiLayerPerceptron(hiddenLayers, learningRate);
         MultiLayerNetwork model = mlp.createModel();
 
         double[] weights = {0.1, 0.2, 0.3};
         int nIn = 2;
         int layerIndex = 1;
 
-        mlp.setWeights(model, nIn, layerIndex, weights);
+        MultiLayerPerceptron.setWeights(model, nIn, layerIndex, weights);
         INDArray weightArray = model.getLayer(layerIndex).getParam("W");
         double[] actualWeights = new double[weights.length];
         int count = 0;
@@ -74,7 +72,7 @@ public class MultiLayerPerceptronTest {
         double learningRate = 0.01;
         int epochs = 100;
 
-        MultiLayerPerceptron mlp = new MultiLayerPerceptron(hiddenLayers, learningRate, epochs);
+        MultiLayerPerceptron mlp = new MultiLayerPerceptron(hiddenLayers, learningRate);
         MultiLayerNetwork model = mlp.createModel();
 
         DataManager dataManager = new DataManager("src/test/resources/");
@@ -85,6 +83,6 @@ public class MultiLayerPerceptronTest {
 
         DataSetIterator trainData = new ListDataSetIterator<>(List.of(new DataSet(inputData, outputData)), 10);
 
-        assertDoesNotThrow(() -> mlp.trainModel(model, trainData));
+        assertDoesNotThrow(() -> MultiLayerPerceptron.trainModel(model, trainData, epochs));
     }
 }

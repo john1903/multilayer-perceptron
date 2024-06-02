@@ -10,24 +10,20 @@ import java.io.IOException;
 
 public class MultiLayerPerceptronManager {
     private final MultiLayerPerceptron multiLayerPerceptron;
-    public MultiLayerPerceptronManager(int[] hiddenLayers, double learningRate, int epochs) {
-        multiLayerPerceptron = new MultiLayerPerceptron(hiddenLayers, learningRate, epochs);
-    }
-
-    public MultiLayerPerceptronManager(MultiLayerNetwork model) {
-        multiLayerPerceptron = new MultiLayerPerceptron(model);
+    public MultiLayerPerceptronManager(int[] hiddenLayers, double learningRate) {
+        multiLayerPerceptron = new MultiLayerPerceptron(hiddenLayers, learningRate);
     }
 
     public MultiLayerNetwork createModel() {
         return multiLayerPerceptron.createModel();
     }
 
-    public void trainModel(MultiLayerNetwork model, DataSetIterator trainData) {
-        multiLayerPerceptron.trainModel(model, trainData);
+    public static void trainModel(MultiLayerNetwork model, DataSetIterator trainData, int epochs) {
+        MultiLayerPerceptron.trainModel(model, trainData, epochs);
     }
 
-    public void setWeights(MultiLayerNetwork model, int nIn, int layerIndex, double[] weights) {
-        multiLayerPerceptron.setWeights(model, nIn, layerIndex, weights);
+    public static void setWeights(MultiLayerNetwork model, int nIn, int layerIndex, double[] weights) {
+        MultiLayerPerceptron.setWeights(model, nIn, layerIndex, weights);
     }
 
     public static void saveModel(MultiLayerNetwork model, String filePath) throws IOException {
