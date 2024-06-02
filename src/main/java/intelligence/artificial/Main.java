@@ -11,140 +11,106 @@ import org.deeplearning4j.datasets.iterator.utilty.ListDataSetIterator;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        MultiLayerPerceptronManager manager = null;
-        MultiLayerNetwork model = null;
+        if (args.length < 1) {
+            printUsage();
+            return;
+        }
 
-        while (true) {
-            System.out.println("Select an option:");
-            System.out.println("1. Create a new model");
-            System.out.println("2. Train model");
-            System.out.println("3. Set weights");
-            System.out.println("4. Save model");
-            System.out.println("5. Load model");
-            System.out.println("6. Generate CSV with predictions");
-            System.out.println("7. Exit");
+        MultiLayerPerceptronManager manager;
+        MultiLayerNetwork model;
 
-            String choiceStr = scanner.nextLine();
-            int choice;
-            try {
-                choice = Integer.parseInt(choiceStr);
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid option. Please enter a number.");
-                continue;
-            }
-
-            try {
-                switch (choice) {
-                    case 1:
-                        System.out.print("Enter hidden layers (comma separated): ");
-                        String[] hiddenLayersStr = scanner.nextLine().split(",");
-                        int[] hiddenLayers = new int[hiddenLayersStr.length];
-                        for (int i = 0; i < hiddenLayersStr.length; i++) {
-                            hiddenLayers[i] = Integer.parseInt(hiddenLayersStr[i].trim());
-                        }
-                        System.out.print("Enter learning rate: ");
-                        double learningRate = Double.parseDouble(scanner.nextLine());
-                        System.out.print("Enter epochs: ");
-                        int epochs = Integer.parseInt(scanner.nextLine());
-
-                        manager = new MultiLayerPerceptronManager(hiddenLayers, learningRate, epochs);
-                        model = manager.createModel();
-                        System.out.println("Model created successfully.");
-                        break;
-
-                    case 2:
-                        if (model == null) {
-                            System.out.println("Create or load a model first.");
-                            break;
-                        }
-                        System.out.print("Enter the path to the training data folder: ");
-                        String trainDataPath = scanner.nextLine();
-                        System.out.println(trainDataPath);
-                        if (trainDataPath.isEmpty()) {
-                            System.out.println("Path cannot be empty. Please try again.");
-                            break;
-                        }
-                        DataManager dataManager = new DataManager(trainDataPath);
-                        INDArray[] data = dataManager.loadAllData();
-                        if (data == null || data.length < 2 || data[0].rows() == 0 || data[1].rows() == 0) {
-                            System.out.println("Invalid data. Skipping training.");
-                            break;
-                        }
-                        DataSetIterator trainData = new ListDataSetIterator<>(List.of(new DataSet(data[0], data[1])), 10);
-                        assert manager != null;
-                        manager.trainModel(model, trainData);
-                        System.out.println("Model trained successfully.");
-                        break;
-
-                    case 3:
-                        if (model == null) {
-                            System.out.println("Create or load a model first.");
-                            break;
-                        }
-                        System.out.print("Enter layer index: ");
-                        int layerIndex = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Enter number of inputs: ");
-                        int nIn = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Enter weights (comma separated): ");
-                        String[] weightsStr = scanner.nextLine().split(",");
-                        double[] weights = new double[weightsStr.length];
-                        for (int i = 0; i < weightsStr.length; i++) {
-                            weights[i] = Double.parseDouble(weightsStr[i].trim());
-                        }
-                        assert manager != null;
-                        manager.setWeights(model, nIn, layerIndex, weights);
-                        System.out.println("Weights set successfully.");
-                        break;
-
-                    case 4:
-                        if (model == null) {
-                            System.out.println("Create or load a model first.");
-                            break;
-                        }
-                        System.out.print("Enter file path to save the model: ");
-                        String savePath = scanner.nextLine();
-                        MultiLayerPerceptronManager.saveModel(model, savePath);
-                        System.out.println("Model saved successfully.");
-                        break;
-
-                    case 5:
-                        System.out.print("Enter file path to load the model: ");
-                        String loadPath = scanner.nextLine();
-                        model = MultiLayerPerceptronManager.loadModel(loadPath);
-                        manager = new MultiLayerPerceptronManager(model);
-                        System.out.println("Model loaded successfully.");
-                        break;
-
-                    case 6:
-                        if (model == null) {
-                            System.out.println("Create or load a model first.");
-                            break;
-                        }
-                        System.out.print("Enter the path to the user data file: ");
-                        String userDataPath = scanner.nextLine();
-                        System.out.print("Enter the path to save the CSV file: ");
-                        String csvFilePath = scanner.nextLine();
-                        generatePredictionsCSV(model, userDataPath, csvFilePath);
-                        System.out.println("CSV file generated successfully.");
-                        break;
-
-                    case 7:
-                        System.out.println("Exiting...");
+        try {
+            switch (args[0]) {
+                case "create":
+                    if (args.length < 5) {
+                        printUsage();
                         return;
+                    }
+                    String[] hiddenLayersStr = args[1].split(",");
+                    int[] hiddenLayers = new int[hiddenLayersStr.length];
+                    for (int i = 0; i < hiddenLayersStr.length; i++) {
+                        hiddenLayers[i] = Integer.parseInt(hiddenLayersStr[i].trim());
+                    }
+                    double learningRate = Double.parseDouble(args[2]);
+                    int epochs = Integer.parseInt(args[3]);
+                    String savePath = args[4];
 
-                    default:
-                        System.out.println("Invalid option. Please try again.");
-                }
-            } catch (IOException e) {
-                System.out.println("An error occurred: " + e.getMessage());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid number format: " + e.getMessage());
+                    manager = new MultiLayerPerceptronManager(hiddenLayers, learningRate, epochs);
+                    model = manager.createModel();
+                    MultiLayerPerceptronManager.saveModel(model, savePath);
+                    System.out.println("Model created and saved successfully.");
+                    break;
+
+                case "train":
+                    if (args.length < 3) {
+                        printUsage();
+                        return;
+                    }
+                    String modelPath = args[1];
+                    String trainDataPath = args[2];
+
+                    model = MultiLayerPerceptronManager.loadModel(modelPath);
+                    manager = new MultiLayerPerceptronManager(model);
+
+                    DataManager dataManager = new DataManager(trainDataPath);
+                    INDArray[] data = dataManager.loadAllData();
+                    if (data == null || data.length < 2 || data[0].rows() == 0 || data[1].rows() == 0) {
+                        System.out.println("Invalid data. Skipping training.");
+                        return;
+                    }
+                    DataSetIterator trainData = new ListDataSetIterator<>(List.of(new DataSet(data[0], data[1])), 10);
+                    manager.trainModel(model, trainData);
+                    MultiLayerPerceptronManager.saveModel(model, modelPath);
+                    System.out.println("Model trained and saved successfully.");
+                    System.out.println("MODEL_EVALUATION: " + model.evaluate(trainData).stats());
+                    break;
+
+                case "set-weights":
+                    if (args.length < 6) {
+                        printUsage();
+                        return;
+                    }
+                    modelPath = args[1];
+                    int layerIndex = Integer.parseInt(args[2]);
+                    int nIn = Integer.parseInt(args[3]);
+                    String[] weightsStr = args[4].split(",");
+                    double[] weights = new double[weightsStr.length];
+                    for (int i = 0; i < weightsStr.length; i++) {
+                        weights[i] = Double.parseDouble(weightsStr[i].trim());
+                    }
+
+                    model = MultiLayerPerceptronManager.loadModel(modelPath);
+                    manager = new MultiLayerPerceptronManager(model);
+                    manager.setWeights(model, nIn, layerIndex, weights);
+                    MultiLayerPerceptronManager.saveModel(model, modelPath);
+                    System.out.println("Weights set and model saved successfully.");
+                    break;
+
+                case "predict":
+                    if (args.length < 4) {
+                        printUsage();
+                        return;
+                    }
+                    modelPath = args[1];
+                    String userDataPath = args[2];
+                    String csvFilePath = args[3];
+
+                    model = MultiLayerPerceptronManager.loadModel(modelPath);
+                    generatePredictionsCSV(model, userDataPath, csvFilePath);
+                    System.out.println("CSV file generated successfully.");
+                    break;
+
+                default:
+                    printUsage();
+                    break;
             }
+        } catch (IOException e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number format: " + e.getMessage());
         }
     }
 
@@ -168,5 +134,13 @@ public class Main {
                         .append(String.valueOf(actualOutputs.getFloat(i, 1))).append("\n");
             }
         }
+    }
+
+    private static void printUsage() {
+        System.out.println("Usage:");
+        System.out.println("  create <hidden_layers> <learning_rate> <epochs> <path_to_save>");
+        System.out.println("  train <model_path> <train_data_path>");
+        System.out.println("  set-weights <model_path> <layer_index> <n_in> <weights>");
+        System.out.println("  predict <model_path> <user_data_path> <csv_file_path>");
     }
 }
