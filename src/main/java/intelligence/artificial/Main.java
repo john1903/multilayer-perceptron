@@ -118,6 +118,11 @@ public class Main {
         INDArray actualOutputs = data[1];
         INDArray predictedOutputs = model.output(inputs);
 
+        INDArray diff = predictedOutputs.sub(actualOutputs);
+        INDArray squaredDiff = diff.mul(diff);
+        double mse = squaredDiff.meanNumber().doubleValue();
+        System.out.println("MSE: " + mse);
+
         try (FileWriter writer = new FileWriter(csvFilePath)) {
             writer.append("inputX,inputY,predictedPositionX,predictedPositionY,actualX,actualY\n");
 
