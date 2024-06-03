@@ -5,12 +5,9 @@ import intelligence.artificial.managers.MultiLayerPerceptronManager;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
-import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
-import org.deeplearning4j.datasets.iterator.utilty.ListDataSetIterator;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -59,8 +56,8 @@ public class Main {
                         System.out.println("Invalid data. Skipping training.");
                         return;
                     }
-                    DataSetIterator trainData = new ListDataSetIterator<>(List.of(new DataSet(data[0], data[1])), 10);
-                    MultiLayerPerceptronManager.trainModel(model, trainData, epochs);
+                    DataSet trainData = new DataSet(data[0], data[1]);
+                    MultiLayerPerceptronManager.trainModel(model, trainData, epochs, 10);
                     MultiLayerPerceptronManager.saveModel(model, modelPath);
                     System.out.println("Model trained and saved successfully.");
                     break;

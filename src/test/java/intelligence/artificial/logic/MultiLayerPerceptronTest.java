@@ -3,17 +3,14 @@ package intelligence.artificial.logic;
 import static org.junit.jupiter.api.Assertions.*;
 
 import intelligence.artificial.managers.DataManager;
-import org.deeplearning4j.datasets.iterator.utilty.ListDataSetIterator;
 import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.junit.jupiter.api.Test;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
-import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
 import java.io.IOException;
-import java.util.List;
 
 public class MultiLayerPerceptronTest {
 
@@ -68,9 +65,9 @@ public class MultiLayerPerceptronTest {
 
     @Test
     public void testTrainModel() throws IOException {
-        int[] hiddenLayers = {4, 5, 4, 5, 5, 4, 5, 4};
-        double learningRate = 0.01;
-        int epochs = 100;
+        int[] hiddenLayers = {4, 4};
+        double learningRate = 0.001;
+        int epochs = 250;
 
         MultiLayerPerceptron mlp = new MultiLayerPerceptron(hiddenLayers, learningRate);
         MultiLayerNetwork model = mlp.createModel();
@@ -81,8 +78,6 @@ public class MultiLayerPerceptronTest {
         INDArray inputData = data[0];
         INDArray outputData = data[1];
 
-        DataSetIterator trainData = new ListDataSetIterator<>(List.of(new DataSet(inputData, outputData)), 10);
-
-        assertDoesNotThrow(() -> MultiLayerPerceptron.trainModel(model, trainData, epochs));
+        assertDoesNotThrow(() -> MultiLayerPerceptron.trainModel(model, new DataSet(inputData, outputData), epochs, 10));
     }
 }

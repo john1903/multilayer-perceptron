@@ -15,7 +15,7 @@ public class LastIterationScoreListener extends BaseTrainingListener implements 
     @Override
     public void iterationDone(Model model, int iteration, int epoch) {
         double lastScore = model.score();
-        if (iteration == printIterations - 1) {
+        if (iteration % printIterations == 0) {
             System.out.println("MODEL_SCORE: " + lastScore);
         }
     }

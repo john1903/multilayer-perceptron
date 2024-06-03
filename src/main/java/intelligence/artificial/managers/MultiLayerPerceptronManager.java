@@ -3,7 +3,7 @@ package intelligence.artificial.managers;
 import intelligence.artificial.logic.MultiLayerPerceptron;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
-import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
+import org.nd4j.linalg.dataset.DataSet;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,8 +18,8 @@ public class MultiLayerPerceptronManager {
         return multiLayerPerceptron.createModel();
     }
 
-    public static void trainModel(MultiLayerNetwork model, DataSetIterator trainData, int epochs) {
-        MultiLayerPerceptron.trainModel(model, trainData, epochs);
+    public static void trainModel(MultiLayerNetwork model, DataSet trainData, int epochs, int batchSize) {
+        MultiLayerPerceptron.trainModel(model, trainData, epochs, batchSize);
     }
 
     public static void setWeights(MultiLayerNetwork model, int nIn, int layerIndex, double[] weights) {
