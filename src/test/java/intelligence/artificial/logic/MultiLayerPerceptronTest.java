@@ -66,7 +66,7 @@ public class MultiLayerPerceptronTest {
     @Test
     public void testTrainModel() throws IOException {
         int[] hiddenLayers = {4, 4};
-        double learningRate = 0.001;
+        double learningRate = 0.0001;
         int epochs = 250;
 
         MultiLayerPerceptron mlp = new MultiLayerPerceptron(hiddenLayers, learningRate);
