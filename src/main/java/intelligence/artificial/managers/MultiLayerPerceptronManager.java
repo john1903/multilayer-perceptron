@@ -18,8 +18,8 @@ public class MultiLayerPerceptronManager {
         return multiLayerPerceptron.createModel();
     }
 
-    public static void trainModel(MultiLayerNetwork model, DataSet trainData, int epochs, int batchSize) {
-        MultiLayerPerceptron.trainModel(model, trainData, epochs, batchSize);
+    public static void trainModel(MultiLayerNetwork model, DataSet trainData, int batchSize) {
+        MultiLayerPerceptron.trainModel(model, trainData, batchSize);
     }
 
     public static void setWeights(MultiLayerNetwork model, int nIn, int layerIndex, double[] weights) {

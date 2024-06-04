@@ -1,5 +1,6 @@
 package intelligence.artificial;
 
+import intelligence.artificial.logic.EpochScoreListener;
 import intelligence.artificial.managers.DataManager;
 import intelligence.artificial.managers.MultiLayerPerceptronManager;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
@@ -41,13 +42,14 @@ public class Main {
                     break;
 
                 case "train":
-                    if (args.length < 4) {
+                    if (args.length < 5) {
                         printUsage();
                         return;
                     }
                     String modelPath = args[1];
                     String trainDataPath = args[2];
-                    int epochs = Integer.parseInt(args[3]);
+                    String testDataPath = args[3];
+                    int epochs = Integer.parseInt(args[4]);
 
                     model = MultiLayerPerceptronManager.loadModel(modelPath);
                     DataManager dataManager = new DataManager(trainDataPath);
@@ -56,8 +58,18 @@ public class Main {
                         System.out.println("Invalid data. Skipping training.");
                         return;
                     }
+                    dataManager = new DataManager(testDataPath);
+                    INDArray[] testData = dataManager.loadAllData();
+                    if (testData == null || testData.length < 2 || testData[0].rows() == 0 || testData[1].rows() == 0) {
+                        System.out.println("Invalid test data. Skipping training.");
+                        return;
+                    }
                     DataSet trainData = new DataSet(data[0], data[1]);
-                    MultiLayerPerceptronManager.trainModel(model, trainData, epochs, 10);
+                    EpochScoreListener epochScoreListener = new EpochScoreListener(data, testData);
+                    for (int i = 0; i < epochs; i++) {
+                        MultiLayerPerceptronManager.trainModel(model, trainData, 10);
+                        epochScoreListener.onEpochEnd(model);
+                    }
                     MultiLayerPerceptronManager.saveModel(model, modelPath);
                     System.out.println("Model trained and saved successfully.");
                     break;
@@ -115,11 +127,6 @@ public class Main {
         INDArray actualOutputs = data[1];
         INDArray predictedOutputs = model.output(inputs);
 
-        INDArray diff = predictedOutputs.sub(actualOutputs);
-        INDArray squaredDiff = diff.mul(diff);
-        double mse = squaredDiff.meanNumber().doubleValue();
-        System.out.println("MSE: " + mse);
-
         try (FileWriter writer = new FileWriter(csvFilePath)) {
             writer.append("inputX,inputY,predictedPositionX,predictedPositionY,actualX,actualY\n");
 
@@ -137,7 +144,7 @@ public class Main {
     private static void printUsage() {
         System.out.println("Usage:");
         System.out.println("  create <hidden_layers> <learning_rate> <path_to_save>");
-        System.out.println("  train <model_path> <train_data_path> <epochs>");
+        System.out.println("  train <model_path> <training_data_path> <test_data_path> <epochs>");
         System.out.println("  set-weights <model_path> <layer_index> <n_in> <weights>");
         System.out.println("  predict <model_path> <user_data_path> <csv_file_path>");
     }

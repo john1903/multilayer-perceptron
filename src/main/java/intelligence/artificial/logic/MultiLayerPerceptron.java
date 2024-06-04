@@ -68,13 +68,10 @@ public class MultiLayerPerceptron {
         model.getLayer(layerIndex).setParam("W", weightArray);
     }
 
-    public static void trainModel(MultiLayerNetwork model, DataSet dataSet, int epochs, int batchSize) {
-        model.setListeners(new EpochScoreListener());
-        for (int i = 0; i < epochs; i++) {
-            Collections.shuffle(dataSet.asList());
-            DataSetIterator data = new ListDataSetIterator<>(dataSet.asList(), batchSize);
-            model.fit(data);
-        }
+    public static void trainModel(MultiLayerNetwork model, DataSet dataSet, int batchSize) {
+        Collections.shuffle(dataSet.asList());
+        DataSetIterator data = new ListDataSetIterator<>(dataSet.asList(), batchSize);
+        model.fit(data);
     }
 
 }
