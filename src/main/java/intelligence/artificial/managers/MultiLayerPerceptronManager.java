@@ -22,10 +22,6 @@ public class MultiLayerPerceptronManager {
         MultiLayerPerceptron.trainModel(model, trainData, batchSize);
     }
 
-    public static void setWeights(MultiLayerNetwork model, int nIn, int layerIndex, double[] weights) {
-        MultiLayerPerceptron.setWeights(model, nIn, layerIndex, weights);
-    }
-
     public static void saveModel(MultiLayerNetwork model, String filePath) throws IOException {
         ModelSerializer.writeModel(model, new File(filePath), true);
     }

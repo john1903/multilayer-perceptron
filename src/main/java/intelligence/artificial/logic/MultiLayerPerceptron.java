@@ -10,10 +10,8 @@ import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.activations.Activation;
-import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
-import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
@@ -39,7 +37,7 @@ public class MultiLayerPerceptron {
                 .list();
 
         listBuilder.layer(0, new DenseLayer.Builder().nIn(2).nOut(2)
-                .activation(Activation.RELU).weightInit(WeightInit.XAVIER).build());
+                    .activation(Activation.IDENTITY).weightInit(WeightInit.XAVIER).build());
 
         for (int i = 0; i < hiddenLayers.length; i++) {
             listBuilder.layer(i + 1, new DenseLayer.Builder().nIn(i == 0 ? 2 : hiddenLayers[i - 1])
@@ -56,16 +54,6 @@ public class MultiLayerPerceptron {
         model.init();
 
         return model;
-    }
-
-    public static void setWeights(MultiLayerNetwork model, int nIn, int layerIndex, double[] weights) {
-        INDArray weightArray = Nd4j.create(weights);
-
-        int nOut = weights.length;
-        double scalingFactor = Math.sqrt(2.0 / (nIn + nOut));
-        weightArray.muli(scalingFactor);
-
-        model.getLayer(layerIndex).setParam("W", weightArray);
     }
 
     public static void trainModel(MultiLayerNetwork model, DataSet dataSet, int batchSize) {

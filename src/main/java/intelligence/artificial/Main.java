@@ -74,26 +74,6 @@ public class Main {
                     System.out.println("Model trained and saved successfully.");
                     break;
 
-                case "set-weights":
-                    if (args.length < 6) {
-                        printUsage();
-                        return;
-                    }
-                    modelPath = args[1];
-                    int layerIndex = Integer.parseInt(args[2]);
-                    int nIn = Integer.parseInt(args[3]);
-                    String[] weightsStr = args[4].split(",");
-                    double[] weights = new double[weightsStr.length];
-                    for (int i = 0; i < weightsStr.length; i++) {
-                        weights[i] = Double.parseDouble(weightsStr[i].trim());
-                    }
-
-                    model = MultiLayerPerceptronManager.loadModel(modelPath);
-                    MultiLayerPerceptronManager.setWeights(model, nIn, layerIndex, weights);
-                    MultiLayerPerceptronManager.saveModel(model, modelPath);
-                    System.out.println("Weights set and model saved successfully.");
-                    break;
-
                 case "predict":
                     if (args.length < 4) {
                         printUsage();
@@ -145,7 +125,6 @@ public class Main {
         System.out.println("Usage:");
         System.out.println("  create <hidden_layers> <learning_rate> <path_to_save>");
         System.out.println("  train <model_path> <training_data_path> <test_data_path> <epochs>");
-        System.out.println("  set-weights <model_path> <layer_index> <n_in> <weights>");
         System.out.println("  predict <model_path> <user_data_path> <csv_file_path>");
     }
 }
