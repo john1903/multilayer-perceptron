@@ -37,7 +37,7 @@ public class MultiLayerPerceptron {
                 .list();
 
         listBuilder.layer(0, new DenseLayer.Builder().nIn(2).nOut(2)
-                    .activation(Activation.IDENTITY).weightInit(WeightInit.XAVIER).build());
+                .activation(Activation.IDENTITY).weightInit(WeightInit.IDENTITY).build());
 
         for (int i = 0; i < hiddenLayers.length; i++) {
             listBuilder.layer(i + 1, new DenseLayer.Builder().nIn(i == 0 ? 2 : hiddenLayers[i - 1])
@@ -61,5 +61,4 @@ public class MultiLayerPerceptron {
         DataSetIterator data = new ListDataSetIterator<>(dataSet.asList(), batchSize);
         model.fit(data);
     }
-
 }
