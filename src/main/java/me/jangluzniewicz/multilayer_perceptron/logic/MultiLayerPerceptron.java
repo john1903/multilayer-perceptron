@@ -1,4 +1,4 @@
-package intelligence.artificial.logic;
+package me.jangluzniewicz.multilayer_perceptron.logic;
 
 import org.deeplearning4j.datasets.iterator.utilty.ListDataSetIterator;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;

@@ -1,8 +1,9 @@
-package intelligence.artificial.logic;
+package me.jangluzniewicz.multilayer_perceptron.logic;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import intelligence.artificial.managers.DataManager;
+import me.jangluzniewicz.multilayer_perceptron.managers.DataManager;
+import me.jangluzniewicz.multilayer_perceptron.logic.MultiLayerPerceptron;
 import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.junit.jupiter.api.Test;

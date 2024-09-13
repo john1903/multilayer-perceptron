@@ -1,6 +1,6 @@
-package intelligence.artificial.managers;
+package me.jangluzniewicz.multilayer_perceptron.managers;
 
-import intelligence.artificial.logic.MultiLayerPerceptron;
+import me.jangluzniewicz.multilayer_perceptron.logic.MultiLayerPerceptron;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.dataset.DataSet;

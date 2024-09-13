@@ -1,4 +1,4 @@
-package intelligence.artificial.logic;
+package me.jangluzniewicz.multilayer_perceptron.logic;
 
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.api.ndarray.INDArray;

@@ -1,6 +1,6 @@
-package intelligence.artificial.managers;
+package me.jangluzniewicz.multilayer_perceptron.managers;
 
-import intelligence.artificial.dao.DataLoader;
+import me.jangluzniewicz.multilayer_perceptron.data.DataLoader;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 

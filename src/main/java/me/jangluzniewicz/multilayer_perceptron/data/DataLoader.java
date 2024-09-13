@@ -1,4 +1,4 @@
-package intelligence.artificial.dao;
+package me.jangluzniewicz.multilayer_perceptron.data;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -1,5 +1,6 @@
-package intelligence.artificial.managers;
+package me.jangluzniewicz.multilayer_perceptron.managers;
 
+import me.jangluzniewicz.multilayer_perceptron.managers.DataManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

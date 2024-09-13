@@ -1,5 +1,6 @@
-package intelligence.artificial.dao;
+package me.jangluzniewicz.multilayer_perceptron.data;
 
+import me.jangluzniewicz.multilayer_perceptron.data.DataLoader;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

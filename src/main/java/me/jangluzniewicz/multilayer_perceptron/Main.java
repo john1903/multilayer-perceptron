@@ -1,8 +1,8 @@
-package intelligence.artificial;
+package me.jangluzniewicz.multilayer_perceptron;
 
-import intelligence.artificial.logic.EpochScoreListener;
-import intelligence.artificial.managers.DataManager;
-import intelligence.artificial.managers.MultiLayerPerceptronManager;
+import me.jangluzniewicz.multilayer_perceptron.logic.EpochScoreListener;
+import me.jangluzniewicz.multilayer_perceptron.managers.DataManager;
+import me.jangluzniewicz.multilayer_perceptron.managers.MultiLayerPerceptronManager;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
