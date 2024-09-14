@@ -94,4 +94,5 @@ Possible improvements to the program could include experimenting with other mach
 
 ### License
 
-This project is open-source and distributed under the Apache License 2.0.
+This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE.txt) file for details.
+
