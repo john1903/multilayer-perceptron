@@ -84,6 +84,10 @@ From the experiments conducted in the research section, different network archit
 | 2             | 4, 8      | ReLU                | 0.0001        | 7      |
 | 3             | 4, 8, 4   | ReLU                | 0.0001        | 10     |
 
+<img src="charts/chart_1.png">
+<img src="charts/chart_2.png">
+<img src="charts/chart_3.png">
+
 ### Future Work
 
 Possible improvements to the program could include experimenting with other machine learning models or expanding the dataset to handle more diverse UWB signal conditions.
