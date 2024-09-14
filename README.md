@@ -1,4 +1,4 @@
-## README for Multi-Layer Perceptron Program
+## README
 
 ### Overview
 
