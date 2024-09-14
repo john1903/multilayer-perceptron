@@ -1,4 +1,4 @@
-## README
+## Multi-Layer Perceptron (MLP)
 
 ### Overview
 
