@@ -84,9 +84,9 @@ From the experiments conducted in the research section, different network archit
 | 2             | 4, 8      | ReLU                | 0.0001        | 7      |
 | 3             | 4, 8, 4   | ReLU                | 0.0001        | 10     |
 
-<img src="charts/chart_1.png">
-<img src="charts/chart_2.png">
-<img src="charts/chart_3.png">
+<img src="%20charts/chart_1.png">
+<img src="%20charts/chart_2.png">
+<img src="%20charts/chart_3.png">
 
 ### Future Work
 
