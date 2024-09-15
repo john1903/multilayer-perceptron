@@ -94,7 +94,7 @@ Possible improvements to the program could include experimenting with other mach
 
 ### Authors
 
-- Jan Gluźniewicz (247665)  
+- John Gluzniewicz 
 
 ### License
 
