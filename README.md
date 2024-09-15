@@ -34,33 +34,33 @@ The program can be executed using the following commands:
 1. **Create a Model**  
    Command:
    ```bash
-   java -jar multilayer_perceptron.jar create <hidden_layers> <learning_rate> <path_to_save>
+   java -jar multilayer-perceptron.jar create <hidden_layers> <learning_rate> <path_to_save>
    ```
    Example:
    ```bash
-   java -jar multilayer_perceptron.jar create 32,16,8 0.001 ./model.zip
+   java -jar multilayer-perceptron.jar create 32,16,8 0.001 ./model.zip
    ```
    This will create a model with 3 hidden layers (32, 16, and 8 neurons, respectively) and a learning rate of 0.001. The model will be saved to `model.zip`.
 
 2. **Train a Model**  
    Command:
    ```bash
-   java -jar multilayer_perceptron.jar train <model_path> <training_data_path> <test_data_path> <epochs>
+   java -jar multilayer-perceptron.jar train <model_path> <training_data_path> <test_data_path> <epochs>
    ```
    Example:
    ```bash
-   java -jar multilayer_perceptron.jar train ./model.zip ./train_data.csv ./test_data.csv 10
+   java -jar multilayer-perceptron.jar train ./model.zip ./train_data.csv ./test_data.csv 10
    ```
    This will train the model saved at `model.zip` using the training dataset from `train_data.csv`, and test it on `test_data.csv` over 10 epochs.
 
 3. **Make Predictions**  
    Command:
    ```bash
-   java -jar multilayer_perceptron.jar predict <model_path> <user_data_path> <csv_file_path>
+   java -jar multilayer-perceptron.jar predict <model_path> <user_data_path> <csv_file_path>
    ```
    Example:
    ```bash
-   java -jar multilayer_perceptron.jar predict ./model.zip ./user_data.csv ./predictions.csv
+   java -jar multilayer-perceptron.jar predict ./model.zip ./user_data.csv ./predictions.csv
    ```
    This will load the model from `model.zip`, make predictions based on the input data from `user_data.csv`, and save the results in `predictions.csv`.
 
